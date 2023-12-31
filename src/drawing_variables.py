@@ -14,7 +14,7 @@ colors = {
     'seagreen1': '#106040',
     'green1': '#107720',
     'green2': '#22A038',
-    'orange1': '#802060',
+    'orange1': '#806020',
     'orange2': '#AA9227',
     'yellow1': '#A0bb10',
     'yellow2': '#AACC30',

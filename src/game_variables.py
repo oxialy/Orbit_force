@@ -11,11 +11,12 @@ from .planet import Planet
 import pygame
 
 
-p1 = Planet((300,300), 16)
+p1 = Planet((300,300), 13)
 
 orbit_1 = p1.init_orbit()
 
-planets = [p1] + orbit_1
+planets = [p1]
+objects = [p1] + orbit_1
 
 
 TOGGLE_PATH = True

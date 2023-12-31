@@ -55,6 +55,9 @@ def main():
                 if event.key == K_a:
                     planet.toggle_path(GV.planets)
 
+                if event.key == K_r:
+                    GF.reset_pos(GV.objects)
+
                 if event.key == K_SPACE:
                     pass
                 if event.key == K_l:
@@ -66,7 +69,7 @@ def main():
         if pygame.mouse.get_pressed()[0]:
             pos = pygame.mouse.get_pos()
 
-        GV.planets = update_all_planets(GV.planets)
+        GV.planets = update_all_planets(GV.objects)
 
 
         pygame.display.update()

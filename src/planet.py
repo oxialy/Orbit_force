@@ -16,7 +16,7 @@ from random import randrange, choice
 
 
 class Planet:
-    def __init__(self, pos, rad, angle=0, type='planet'):
+    def __init__(self, pos, rad, angle=0, type='planet', orbit_dist=0):
         self.pos = pos
         self.rad = rad
         self.angle = angle
@@ -30,7 +30,7 @@ class Planet:
         self.max_vel = 7
 
         self.orbit = []
-        self.orbit_dist = 60
+        self.orbit_dist = orbit_dist
 
         self.path = []
         self.TRACK_CD = 0
@@ -41,19 +41,32 @@ class Planet:
 
     def init_orbit(self):
         self.type = 'planet'
+        dist_1 = randrange(8,50)
+        dist_2 = randrange(15,65)
+
         angle_1 = randrange(0, 620) / 100
         angle_2 = randrange(0, 620) / 100
 
-        A = msc.get_point_from_angle(self.pos, angle_1, self.orbit_dist)
-        B = msc.get_point_from_angle(self.pos, angle_2, self.orbit_dist)
+        A = msc.get_point_from_angle(self.pos, angle_1, dist_1)
+        B = msc.get_point_from_angle(self.pos, angle_2, dist_2)
+        C = msc.get_point_from_angle(self.pos, angle_2, 30)
 
-        planet_a = Planet(A, 10, angle_1, 'orbit')
-        planet_b = Planet(B, 10, angle_2, 'orbit')
+        planet_a = Planet(A, 10, angle_1, 'orbit', dist_1)
+        planet_b = Planet(B, 10, angle_2, 'orbit', dist_2)
+        planet_c = Planet(C, 10, angle_2, 'orbit', 30)
+
+        planet_a.col = colors['orange1']
+        planet_a.angular_vel = randrange(5, 20) / 100 * choice([-1, 1])
+
+        planet_b.col = colors['orange1']
+        planet_b.angular_vel = randrange(1,13) / 100 * choice([-1, 1])
+
+        planet_c.angular_vel = randrange(1,13) / 100 * choice([-1, 1])
+
 
         self.orbit = [planet_a, planet_b]
 
         return self.orbit
-
 
     def draw(self, win):
         pygame.draw.circle(win, self.col, self.pos, self.rad)
@@ -69,7 +82,7 @@ class Planet:
 
     def draw_path(self, win):
         for pos in self.path:
-            pygame.draw.circle(win, colors['grey1'], pos, 3)
+            pygame.draw.circle(win, colors['grey1'], pos, 1)
 
     def move(self):
         self.pos += self.vel
@@ -77,7 +90,7 @@ class Planet:
     def apply_force(self):
         for orbit in self.orbit:
             B = orbit.pos
-            force_factor = 60
+            force_factor = 3
 
             force = msc.get_gravity(self.pos, B, 0, force_factor)
 
@@ -100,13 +113,15 @@ class Planet:
                 self.vel *= k
 
     def add_pos(self):
-        if len(self.path) < 100:
-            self.path.append(self.pos)
+        x, y = self.pos
+        self.path.append((x,y))
+        if len(self.path) > 170:
+            self.path.pop(0)
 
     def update_orbit(self):
         for orbit in self.orbit:
             orbit.angle += orbit.angular_vel
-            orbit.pos = msc.get_point_from_angle(self.pos, orbit.angle, self.orbit_dist)
+            orbit.pos = msc.get_point_from_angle(self.pos, orbit.angle, orbit.orbit_dist)
 
 
 def update_all_planets(planets):
@@ -118,7 +133,7 @@ def update_all_planets(planets):
 
             planet.move()
 
-        if planet.TRACK_CD >= 4:
+        if planet.TRACK_CD >= 2:
             planet.add_pos()
             planet.TRACK_CD = 0
 
