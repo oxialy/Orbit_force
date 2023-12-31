@@ -6,6 +6,7 @@ from src import settings as sett
 from src.settings import WIDTH, HEIGHT, clock, FPS
 
 from src.drawing_functions import draw_screen
+from src.planet import Planet, update_all_planets
 
 import pygame
 import random
@@ -60,6 +61,9 @@ def main():
 
         if pygame.mouse.get_pressed()[0]:
             pos = pygame.mouse.get_pos()
+
+
+
 
         pygame.display.update()
         clock.tick(FPS)

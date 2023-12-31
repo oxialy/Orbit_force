@@ -76,15 +76,16 @@ def get_force(A, B, rad, force_factor=30, min_force=0):
 
     return Vector2(force_x, force_y)
 
+
 def get_gravity(A, B, rad, force_factor=30, min_force=0):
     dist = get_dist(A, B)
     angle = get_angle(A, B)
 
-    force_x = cos(angle) * (dist - rad + min_force) / force_factor
-    force_y = sin(angle) * (dist - rad + min_force) / force_factor
+    force_x = cos(angle) * (force_factor + min_force) / (dist - rad)
+    force_y = sin(angle) * (force_factor + min_force) / (dist - rad)
 
-    force_x = min(1.5, force_x)
-    force_y = min(1.7, force_y)
+    force_x = min(2.3, force_x)
+    force_y = min(2.3, force_y)
 
     return Vector2(force_x, force_y)
 

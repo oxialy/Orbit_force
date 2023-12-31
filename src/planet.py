@@ -25,6 +25,9 @@ class Planet:
 
         self.angular_vel = 1
         self.vel = Vector2(0,0)
+        self.vel_norm = 0
+
+        self.max_vel = 7
 
         self.orbit = []
         self.orbit_dist = 60
@@ -56,7 +59,29 @@ class Planet:
 
 
     def apply_force(self):
-        pass
+        for orbit in self.orbit:
+            B = orbit.pos
+            force_factor = 60
+
+            force = msc.get_gravity(self.pos, B, 0, force_factor)
+
+            self.vel += force
+
+    def update_vel_norm(self):
+        x, y = self.vel
+
+        self.vel_norm = sqrt(x**2 + y**2)
+
+        return self.vel_norm
+
+    def cap_velocity(self):
+        self.update_vel_norm()
+
+        k = self.max_vel / self.vel_norm
+
+        if self.vel_norm > self.max_vel:
+            self.vel *= k
+
 
     def update_orbit(self):
         for orbit in self.orbit:
@@ -64,7 +89,15 @@ class Planet:
             orbit.pos = msc.get_point_from_angle(self.pos, orbit.angle, self.orbit_dist)
 
 
+def update_all_planets(planets):
+    for planet in planets:
+        planet.apply_force()
+        planet.cap_velocity()
+        planet.update_orbit()
 
+        planet.move()
+
+    return planets
 
 
 

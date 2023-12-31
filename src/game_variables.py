@@ -10,7 +10,9 @@ from .settings import WIDTH, HEIGHT
 import pygame
 
 
-CX, CY = sett.WIDTH//2, sett.HEIGHT//2
+
+
+
 
 
 
