@@ -1,5 +1,6 @@
 from src import game_functions as GF
 from src import game_variables as GV
+from src import planet
 from src import logs
 
 from src import settings as sett
@@ -18,7 +19,7 @@ from random import randrange, choice
 #data = {'test': 'test'}
 
 #logs.save_data(logs.LOG_FILE, data)
-logs.init_log(logs.LOG_FILE)
+#logs.init_log(logs.LOG_FILE)
 
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -51,6 +52,9 @@ def main():
                 if event.key in [K_q, K_ESCAPE]:
                     run_main = False
 
+                if event.key == K_a:
+                    planet.toggle_path(GV.planets)
+
                 if event.key == K_SPACE:
                     pass
                 if event.key == K_l:
@@ -62,7 +66,7 @@ def main():
         if pygame.mouse.get_pressed()[0]:
             pos = pygame.mouse.get_pos()
 
-
+        GV.planets = update_all_planets(GV.planets)
 
 
         pygame.display.update()

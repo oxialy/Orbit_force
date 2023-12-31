@@ -18,13 +18,17 @@ def draw_test(win):
         for i in range(n):
             word = 'non' * i
             write_text()
+    p1 = GV.planets[0]
 
+    write_text(win, len(p1.path), (WIDTH - 40, 40))
 
 
 def draw_screen(win):
     win.fill(bg_color)
 
-    #draw_test(win)
+    draw_elem(win, GV.planets)
+
+    draw_test(win)
 
 
 def draw_elem(win, elements):

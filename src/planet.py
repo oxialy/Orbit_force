@@ -23,7 +23,7 @@ class Planet:
 
         self.col = colors['blue2']
 
-        self.angular_vel = 1
+        self.angular_vel = 0.1
         self.vel = Vector2(0,0)
         self.vel_norm = 0
 
@@ -32,9 +32,15 @@ class Planet:
         self.orbit = []
         self.orbit_dist = 60
 
+        self.path = []
+        self.TRACK_CD = 0
+
+        self.DRAW_PATH = True
+
         self.type = type
 
     def init_orbit(self):
+        self.type = 'planet'
         angle_1 = randrange(0, 620) / 100
         angle_2 = randrange(0, 620) / 100
 
@@ -46,17 +52,27 @@ class Planet:
 
         self.orbit = [planet_a, planet_b]
 
+        return self.orbit
+
+
     def draw(self, win):
         pygame.draw.circle(win, self.col, self.pos, self.rad)
+
+        self.draw_orbit(win)
+
+        if self.DRAW_PATH:
+            self.draw_path(win)
 
     def draw_orbit(self, win):
         for orbit in self.orbit:
             orbit.draw(win)
 
+    def draw_path(self, win):
+        for pos in self.path:
+            pygame.draw.circle(win, colors['grey1'], pos, 3)
+
     def move(self):
         self.pos += self.vel
-
-
 
     def apply_force(self):
         for orbit in self.orbit:
@@ -77,11 +93,15 @@ class Planet:
     def cap_velocity(self):
         self.update_vel_norm()
 
-        k = self.max_vel / self.vel_norm
+        if self.vel != (0,0):
+            k = self.max_vel / self.vel_norm
 
-        if self.vel_norm > self.max_vel:
-            self.vel *= k
+            if self.vel_norm > self.max_vel:
+                self.vel *= k
 
+    def add_pos(self):
+        if len(self.path) < 100:
+            self.path.append(self.pos)
 
     def update_orbit(self):
         for orbit in self.orbit:
@@ -91,17 +111,25 @@ class Planet:
 
 def update_all_planets(planets):
     for planet in planets:
-        planet.apply_force()
-        planet.cap_velocity()
-        planet.update_orbit()
+        if planet.type == 'planet':
+            planet.apply_force()
+            planet.cap_velocity()
+            planet.update_orbit()
 
-        planet.move()
+            planet.move()
+
+        if planet.TRACK_CD >= 4:
+            planet.add_pos()
+            planet.TRACK_CD = 0
+
+        planet.TRACK_CD += 1
 
     return planets
 
 
-
-
+def toggle_path(planets):
+    for planet in planets:
+        planet.DRAW_PATH = not planet.DRAW_PATH
 
 
 

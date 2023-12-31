@@ -5,16 +5,20 @@ from src import msc
 
 from .drawing_variables import colors
 from .settings import WIDTH, HEIGHT
+from .planet import Planet
 
 
 import pygame
 
 
+p1 = Planet((300,300), 16)
+
+orbit_1 = p1.init_orbit()
+
+planets = [p1] + orbit_1
 
 
-
-
-
+TOGGLE_PATH = True
 
 
 questions = [
