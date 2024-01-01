@@ -1,4 +1,5 @@
 from src import game_functions as gf
+from src import settings as sett
 from src import msc
 
 
@@ -22,6 +23,7 @@ class Planet:
         self.angle = angle
 
         self.col = colors['blue2']
+        self.col2 = colors['grey1']
 
         self.angular_vel = 0.1
         self.vel = Vector2(0,0)
@@ -34,6 +36,7 @@ class Planet:
 
         self.path = []
         self.TRACK_CD = 0
+        self.path_limit = 300
 
         self.DRAW_PATH = True
 
@@ -41,30 +44,33 @@ class Planet:
 
     def init_orbit(self):
         self.type = 'planet'
-        dist_1 = randrange(8,50)
-        dist_2 = randrange(15,65)
+        self.col2 = colors['lightgrey1']
+        dist_1 = randrange(8,150)
+        dist_2 = randrange(15, 185)
+        dist_3 = randrange(15, 125)
 
         angle_1 = randrange(0, 620) / 100
         angle_2 = randrange(0, 620) / 100
 
         A = msc.get_point_from_angle(self.pos, angle_1, dist_1)
         B = msc.get_point_from_angle(self.pos, angle_2, dist_2)
-        C = msc.get_point_from_angle(self.pos, angle_2, 30)
+        C = msc.get_point_from_angle(self.pos, angle_2, dist_3)
 
-        planet_a = Planet(A, 10, angle_1, 'orbit', dist_1)
-        planet_b = Planet(B, 10, angle_2, 'orbit', dist_2)
-        planet_c = Planet(C, 10, angle_2, 'orbit', 30)
+        planet_a = Planet(A, 6, angle_1, 'orbit', dist_1)
+        planet_b = Planet(B, 6, angle_2, 'orbit', dist_2)
+        planet_c = Planet(C, 6, angle_2, 'orbit', dist_3)
 
         planet_a.col = colors['orange1']
-        planet_a.angular_vel = randrange(5, 20) / 100 * choice([-1, 1])
+        planet_a.angular_vel = randrange(2, 13) / (30 + dist_1) * choice([-1, 1])
 
         planet_b.col = colors['orange1']
-        planet_b.angular_vel = randrange(1,13) / 100 * choice([-1, 1])
+        planet_b.angular_vel = randrange(3,13) / (30 + dist_2) * choice([-1, 1])
 
-        planet_c.angular_vel = randrange(1,13) / 100 * choice([-1, 1])
+        planet_c.angular_vel = randrange(1,13) / (30 + dist_3) * choice([-1, 1])
 
+        print((dist_1, dist_2, dist_3), (angle_1, angle_2))
 
-        self.orbit = [planet_a, planet_b]
+        self.orbit = [planet_a, planet_b, planet_c]
 
         return self.orbit
 
@@ -82,7 +88,7 @@ class Planet:
 
     def draw_path(self, win):
         for pos in self.path:
-            pygame.draw.circle(win, colors['grey1'], pos, 1)
+            pygame.draw.circle(win, self.col2, pos, 1)
 
     def move(self):
         self.pos += self.vel
@@ -90,7 +96,7 @@ class Planet:
     def apply_force(self):
         for orbit in self.orbit:
             B = orbit.pos
-            force_factor = 3
+            force_factor = 20
 
             force = msc.get_gravity(self.pos, B, 0, force_factor)
 
@@ -115,7 +121,7 @@ class Planet:
     def add_pos(self):
         x, y = self.pos
         self.path.append((x,y))
-        if len(self.path) > 170:
+        if len(self.path) > self.path_limit:
             self.path.pop(0)
 
     def update_orbit(self):
@@ -133,7 +139,7 @@ def update_all_planets(planets):
 
             planet.move()
 
-        if planet.TRACK_CD >= 2:
+        if planet.TRACK_CD >= sett.TRACK_RATE:
             planet.add_pos()
             planet.TRACK_CD = 0
 
@@ -145,6 +151,12 @@ def update_all_planets(planets):
 def toggle_path(planets):
     for planet in planets:
         planet.DRAW_PATH = not planet.DRAW_PATH
+
+
+def toggle_path_2(planets):
+    for planet in planets:
+        planet.DRAW_PATH = not planet.DRAW_PATH
+
 
 
 

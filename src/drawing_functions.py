@@ -21,6 +21,8 @@ def draw_test(win):
     p1 = GV.planets[0]
 
     write_text(win, len(p1.path), (WIDTH - 40, 40))
+    write_text(win, p1.path_limit, (WIDTH - 40, 65))
+
 
 
 def draw_screen(win):

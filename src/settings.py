@@ -8,6 +8,8 @@ FPS = 30
 
 clock = pygame.time.Clock()
 
+TRACK_RATE = 2
+
 
 FONT10 = pygame.font.SysFont('arial', 10)
 FONT12 = pygame.font.SysFont('calibri', 12)
