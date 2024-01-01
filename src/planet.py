@@ -38,13 +38,21 @@ class Planet:
         self.TRACK_CD = 0
         self.path_limit = 300
 
+        self.col_path = []
+        self.col_path_offset = 0
+
         self.DRAW_PATH = True
 
         self.type = type
+        self.timer = 0
+
+    def __repr__(self):
+        return repr((self.type, self.timer))
 
     def init_orbit(self):
         self.type = 'planet'
         self.col2 = colors['lightgrey1']
+
         dist_1 = randrange(8,150)
         dist_2 = randrange(15, 185)
         dist_3 = randrange(15, 125)
@@ -61,11 +69,15 @@ class Planet:
         planet_c = Planet(C, 6, angle_2, 'orbit', dist_3)
 
         planet_a.col = colors['orange1']
+        planet_a.col_path = self.col_path
         planet_a.angular_vel = randrange(2, 13) / (30 + dist_1) * choice([-1, 1])
 
         planet_b.col = colors['orange1']
+        planet_b.col_path = self.col_path
         planet_b.angular_vel = randrange(3,13) / (30 + dist_2) * choice([-1, 1])
 
+        planet_c.col = colors['orange2']
+        planet_c.col_path = self.col_path
         planet_c.angular_vel = randrange(1,13) / (30 + dist_3) * choice([-1, 1])
 
         print((dist_1, dist_2, dist_3), (angle_1, angle_2))
@@ -87,8 +99,13 @@ class Planet:
             orbit.draw(win)
 
     def draw_path(self, win):
-        for pos in self.path:
-            pygame.draw.circle(win, self.col2, pos, 1)
+        for i, pos in enumerate(self.path):
+            j = i
+            if i // 5 >= len(self.col_path):
+                j = i - 5 * i // len(self.col_path)
+            col = self.col_path[j // 5]
+
+            pygame.draw.circle(win, col, pos, 1)
 
     def move(self):
         self.pos += self.vel
@@ -129,6 +146,14 @@ class Planet:
             orbit.angle += orbit.angular_vel
             orbit.pos = msc.get_point_from_angle(self.pos, orbit.angle, orbit.orbit_dist)
 
+    def update_col(self):
+        i = self.timer // 5
+
+        if self.type == 'planet':
+            print(self, len(self.col_path))
+
+        self.col2 = self.col_path[i]
+
 
 def update_all_planets(planets):
     for planet in planets:
@@ -143,7 +168,10 @@ def update_all_planets(planets):
             planet.add_pos()
             planet.TRACK_CD = 0
 
+        # increment timer
+
         planet.TRACK_CD += 1
+        planet.timer += 1
 
     return planets
 

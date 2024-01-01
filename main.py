@@ -83,8 +83,8 @@ def main():
                     GV.orbit_1[0].path = GV.orbit_1[0].path[a:]
                     GV.orbit_1[1].path = GV.orbit_1[1].path[a:]
 
-
-
+                    GV.orbit_1[0].col_path_offset += a
+                    GV.orbit_1[1].col_path_offset += a
 
                 if event.key == K_r:
                     GF.reset_pos(GV.objects)
