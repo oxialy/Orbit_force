@@ -70,14 +70,17 @@ class Planet:
 
         planet_a.col = colors['orange1']
         planet_a.col_path = self.col_path
+        planet_a.col_path_offset = 30
         planet_a.angular_vel = randrange(2, 13) / (30 + dist_1) * choice([-1, 1])
 
         planet_b.col = colors['orange1']
         planet_b.col_path = self.col_path
+        planet_b.col_path_offset = 60
         planet_b.angular_vel = randrange(3,13) / (30 + dist_2) * choice([-1, 1])
 
         planet_c.col = colors['orange2']
         planet_c.col_path = self.col_path
+        planet_b.col_path_offset = 90
         planet_c.angular_vel = randrange(1,13) / (30 + dist_3) * choice([-1, 1])
 
         print((dist_1, dist_2, dist_3), (angle_1, angle_2))
@@ -100,9 +103,10 @@ class Planet:
 
     def draw_path(self, win):
         for i, pos in enumerate(self.path):
-            j = i
-            if i // 5 >= len(self.col_path):
-                j = i - 5 * i // len(self.col_path)
+            j = i + self.col_path_offset
+            if j // 5 >= len(self.col_path):
+                j = j - 5 * ((j // 5) // len(self.col_path)) * len(self.col_path)
+
             col = self.col_path[j // 5]
 
             pygame.draw.circle(win, col, pos, 1)
